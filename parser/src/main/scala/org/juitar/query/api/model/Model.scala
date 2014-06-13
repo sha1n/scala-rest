@@ -40,6 +40,10 @@ case class Field(qualifiers: Seq[String]) extends Expression {
   override def toString: String = qualifiers.mkString(".")
 }
 
+object Field {
+  def apply(name: String): Field = new Field(Seq(name))
+}
+
 case class OrderExpression(expr: Expression, dir: OrderDirection) extends Expression {
   override def toString: String = s"$expr ${dir.name}"
 }

@@ -7,10 +7,10 @@ import org.juitar.query.generated.{QueryLexer, QueryParser}
 /**
  * @author sha1n
  * @since 6/12/14
+ *
+ * @param trace ANTLR trace flag - for developer debug purposes only.
  */
-class ParserImpl extends Parser {
-
-  private var antlrTrace = false
+class ParserImpl(trace: Boolean = false) extends Parser {
 
   def parseSelect(select: String): Select = {
     parseTree(new SelectParseHandler(createAntlrParser(select)))
@@ -22,15 +22,6 @@ class ParserImpl extends Parser {
 
   def parseFilter(filter: String): Filter = {
     parseTree(new FilterParseHandler(createAntlrParser(filter)))
-  }
-
-  /**
-   * Sets the ANTLR trace flag - for developer debug purposes only.
-   *
-   * @param antlrTrace the trace value, either { @code true} or { @code false}.
-   */
-  final def setAntlrTrace(antlrTrace: Boolean) {
-    this.antlrTrace = antlrTrace
   }
 
   private def parseTree[T](parseHandler: AbstractParseHandler[T]): T = {
@@ -54,7 +45,7 @@ class ParserImpl extends Parser {
     val tokens = new CommonTokenStream(lexer)
     val parser = new QueryParser(tokens)
 
-    if (antlrTrace) {
+    if (trace) {
       parser.setBuildParseTree(true)
       parser.setTrace(true)
     }
@@ -67,7 +58,7 @@ class ParserImpl extends Parser {
 object ParserImpl {
 
   def main(args: Array[String]) {
-    val parserImpl: ParserImpl = new ParserImpl
+    val parserImpl: ParserImpl = new ParserImpl(true)
     val filter = parserImpl.parseFilter("a > b and b < c or d != 1 or e = 'ssss'")
     val select = parserImpl.parseSelect("a,b,c.d, e.f.g")
     val order = parserImpl.parseSort("a,b,c.d desc, e.f.g asc")
