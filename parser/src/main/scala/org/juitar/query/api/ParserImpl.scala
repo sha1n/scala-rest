@@ -1,7 +1,7 @@
 package org.juitar.query.api
 
 import org.antlr.v4.runtime.{ANTLRInputStream, BailErrorStrategy, CommonTokenStream}
-import org.juitar.query.api.model.{Filter, Order, Select}
+import org.juitar.query.api.model.{Filter, Order, Query, Select}
 import org.juitar.query.generated.{QueryLexer, QueryParser}
 
 /**
@@ -11,6 +11,20 @@ import org.juitar.query.generated.{QueryLexer, QueryParser}
  * @param trace ANTLR trace flag - for developer debug purposes only.
  */
 class ParserImpl(trace: Boolean = false) extends Parser {
+
+  def parseQuery(select: Option[String] = None, order: Option[String] = None, filter: Option[String] = None): Query = {
+    new Query(
+      select = select.map(s => {
+        parseSelect(s)
+      }),
+      order = order.map(o => {
+        parseOrder(o)
+      }),
+      filter = filter.map(f => {
+        parseFilter(f)
+      })
+    )
+  }
 
   def parseSelect(select: String): Select = {
     parseTree(new SelectParseHandler(createAntlrParser(select)))

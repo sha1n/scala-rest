@@ -1,12 +1,14 @@
 package org.juitar.query.api
 
-import org.juitar.query.api.model.{Filter, Order, Select}
+import org.juitar.query.api.model.{Filter, Order, Query, Select}
 
 /**
  * @author sha1n
  * @since 6/12/14
  */
 trait Parser {
+
+  def parseQuery(select: Option[String] = None, order: Option[String] = None, filter: Option[String] = None): Query
 
   def parseSelect(select: String): Select
 
