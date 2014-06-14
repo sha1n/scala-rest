@@ -7,7 +7,9 @@ import org.specs2.mutable._
  * @author sha1n
  * @since 6/13/14
  */
-class ParserImplTest extends Specification {
+//@RunWith(classOf[SpecificationWithJUnit])
+class ParserImplTest extends SpecificationWithJUnit {
+  //Specification {
 
   "select" should {
     "succeed parsing basic field list" in {
@@ -42,7 +44,7 @@ class ParserImplTest extends Specification {
 
     "succeed parsing wrapped logical condition" in {
       val parser: ParserImpl = new ParserImpl
-      parser.parseFilter("(a < 1 AND a > 0) OR (b = c AND d != 'kuki')") mustEqual Filter(
+      parser.parseFilter("(a < 1 and a > 0) or (b = c and d != 'kuki')") mustEqual Filter(
         LogicalCondition(LogicalOp.OR,
           Seq(
             WrappedCondition(LogicalCondition(LogicalOp.AND,
@@ -54,7 +56,7 @@ class ParserImplTest extends Specification {
           )
         )
       )
-    }.pendingUntilFixed("LPAREN is not properly parsed - pending fix")
+    }.pendingUntilFixed("Specs2 claims not equal")
 
   }
 }

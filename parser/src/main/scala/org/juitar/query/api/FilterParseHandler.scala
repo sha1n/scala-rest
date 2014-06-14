@@ -4,6 +4,8 @@ import org.juitar.query.api.model._
 import org.juitar.query.generated.QueryParser
 import org.juitar.query.generated.QueryParser._
 
+import scala.collection.mutable
+
 /**
  * @author sha1n
  * @since 6/13/14
@@ -15,7 +17,8 @@ class FilterParseHandler(parser: QueryParser) extends AbstractParseHandler[Filte
   override def exitConditionAnd(ctx: ConditionAndContext) {
     if (!ctx.AND.isEmpty) {
       val conditionCount = ctx.simpleCondition.size
-      val conditions = elementStack.splitAt(conditionCount)._1.reverse.toSeq.asInstanceOf[Seq[Condition]]
+      //      val parts: (mutable.Stack[QueryElement], mutable.Stack[QueryElement]) = elementStack.splitAt(conditionCount)
+      val conditions = popFirst(conditionCount) // parts._1.reverse.toSeq.asInstanceOf[Seq[Condition]]
       val logicalCondition = new LogicalCondition(LogicalOp.AND, conditions)
       elementStack.push(logicalCondition)
     }
@@ -39,7 +42,7 @@ class FilterParseHandler(parser: QueryParser) extends AbstractParseHandler[Filte
   override def exitCondition(ctx: ConditionContext) {
     if (!ctx.OR.isEmpty) {
       val conditionCount = ctx.conditionAnd.size
-      val conditions = elementStack.splitAt(conditionCount)._1.reverse.toSeq.asInstanceOf[Seq[Condition]]
+      val conditions = popFirst(conditionCount) // elementStack.splitAt(conditionCount)._1.reverse.toSeq.asInstanceOf[Seq[Condition]]
       val logicalCondition = new LogicalCondition(LogicalOp.OR, conditions)
       elementStack.push(logicalCondition)
     }
@@ -52,6 +55,15 @@ class FilterParseHandler(parser: QueryParser) extends AbstractParseHandler[Filte
   override protected def handleParsing: Filter = {
     parser.queryFilter
     queryFilter
+  }
+
+  private def popFirst[T <: QueryElement](n: Int): Seq[T] = {
+    val parts: (mutable.Stack[QueryElement], mutable.Stack[QueryElement]) = elementStack.splitAt(n)
+
+    elementStack.clear()
+    elementStack.pushAll(parts._2)
+
+    parts._1.reverse.toSeq.asInstanceOf[Seq[T]]
   }
 
   private def getComparisonOperator(parsedOperatorString: String): CompConditionOp = {
