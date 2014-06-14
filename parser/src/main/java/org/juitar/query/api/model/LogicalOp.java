@@ -5,6 +5,18 @@ package org.juitar.query.api.model;
  * @since 6/12/14
  */
 public enum LogicalOp {
-    AND,
-    OR
+    AND("and"),
+    OR("or");
+
+    private final String str;
+
+    LogicalOp(String str) {
+        this.str = str;
+    }
+
+
+    @Override
+    public final String toString() {
+        return str;
+    }
 }
