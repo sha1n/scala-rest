@@ -8,7 +8,7 @@ import org.juitar.query.generated.QueryParser._
  * @author sha1n
  * @since 6/13/14
  */
-class SortParseHandler(parser: QueryParser) extends AbstractParseHandler[Order](parser) {
+class OrderParseHandler(parser: QueryParser) extends AbstractParseHandler[Order](parser) {
 
   private final var order: Order = _
 

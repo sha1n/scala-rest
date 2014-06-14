@@ -44,7 +44,7 @@ object Field {
   def apply(name: String): Field = new Field(Seq(name))
 }
 
-case class OrderExpression(expr: Expression, dir: OrderDirection) extends Expression {
+case class OrderExpression(expr: Expression, dir: OrderDirection = OrderDirection.ASC) extends Expression {
   override def toString: String = s"$expr ${dir.toString}"
 }
 
