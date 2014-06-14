@@ -6,11 +6,7 @@ import org.antlr.v4.runtime.RecognitionException
  * @author sha1n
  * @since 6/12/14
  */
-class ParserException(format: String,
-                      s: String,
-                      e: RecognitionException,
-                      tokenErrorDisplay: String,
-                      errorHeader: String)
-  extends RuntimeException {
+class ParserException(message: String, e: RecognitionException)
+  extends RuntimeException(message, e) {
 
 }

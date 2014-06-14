@@ -28,9 +28,7 @@ public void exitRule() {
         final String devMessagePattern = "Unexpected token: %s at %s";
         String tokenErrorDisplay = getTokenErrorDisplay(e.getOffendingToken());
         String errorHeader = getErrorHeader(e);
-        throw new ParserException(
-                String.format(devMessagePattern, tokenErrorDisplay, errorHeader),
-                "antlr.parse.error.message", e, tokenErrorDisplay, errorHeader);
+        throw new ParserException(String.format(devMessagePattern, tokenErrorDisplay, errorHeader), e);
     }
 
     super.exitRule();
