@@ -27,7 +27,7 @@ case class WrappedCondition(cond: Condition) extends Condition {
 }
 
 case class LogicalCondition(op: LogicalOp, conds: Seq[Condition]) extends Condition {
-  override def toString: String = conds.mkString(s" ${op.name} ")
+  override def toString: String = conds.mkString(s" ${op.toString} ")
 }
 
 case class ComparisonCondition(op: CompConditionOp, left: Expression, right: Expression) extends Condition {
@@ -45,7 +45,7 @@ object Field {
 }
 
 case class OrderExpression(expr: Expression, dir: OrderDirection) extends Expression {
-  override def toString: String = s"$expr ${dir.name}"
+  override def toString: String = s"$expr ${dir.toString}"
 }
 
 case class StringExpression(s: String) extends Expression {
