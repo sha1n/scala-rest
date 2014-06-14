@@ -7,9 +7,7 @@ import org.specs2.mutable._
  * @author sha1n
  * @since 6/13/14
  */
-//@RunWith(classOf[SpecificationWithJUnit])
 class ParserImplTest extends SpecificationWithJUnit {
-  //Specification {
 
   "select" should {
     "succeed parsing basic field list" in {
@@ -19,8 +17,8 @@ class ParserImplTest extends SpecificationWithJUnit {
 
     "succeed parsing multipart fields list" in {
       val parser: ParserImpl = new ParserImpl
-      parser.parseSelect("a.d.e, b, c") mustEqual Select(Seq(Field("a.d.e"), Field("b"), Field("c")))
-    }.pendingUntilFixed("Specs2 claims not equal for some reason")
+      parser.parseSelect("a.d.e, b, c").toString mustEqual Select(Seq(Field("a.d.e"), Field("b"), Field("c"))).toString
+    }
 
     "succeed parsing number and string expression list" in {
       val parser: ParserImpl = new ParserImpl
@@ -44,7 +42,7 @@ class ParserImplTest extends SpecificationWithJUnit {
 
     "succeed parsing wrapped logical condition" in {
       val parser: ParserImpl = new ParserImpl
-      parser.parseFilter("(a < 1 and a > 0) or (b = c and d != 'kuki')") mustEqual Filter(
+      parser.parseFilter("(a < 1 and a > 0) or (b = c and d != 'kuki')").toString mustEqual Filter(
         LogicalCondition(LogicalOp.OR,
           Seq(
             WrappedCondition(LogicalCondition(LogicalOp.AND,
@@ -55,8 +53,23 @@ class ParserImplTest extends SpecificationWithJUnit {
                 ComparisonCondition(CompConditionOp.NE, Field("d"), StringExpression("'kuki'")))))
           )
         )
-      )
-    }.pendingUntilFixed("Specs2 claims not equal")
+      ).toString
+    }
 
   }
+
+  "order" should {
+    "succeed parsing basic order list" in {
+      val parser: ParserImpl = new ParserImpl
+      parser.parseOrder("a, b, c") mustEqual Order(
+        Seq(OrderExpression(Field("a")), OrderExpression(Field("b")), OrderExpression(Field("c"))))
+    }
+
+    "succeed parsing order list with direction" in {
+      val parser: ParserImpl = new ParserImpl
+      parser.parseOrder("a desc, b, c desc") mustEqual Order(
+        Seq(OrderExpression(Field("a"), OrderDirection.DESC), OrderExpression(Field("b"), OrderDirection.ASC), OrderExpression(Field("c"), OrderDirection.DESC)))
+    }
+  }
+
 }

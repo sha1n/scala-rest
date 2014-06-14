@@ -10,7 +10,7 @@ trait Parser {
 
   def parseSelect(select: String): Select
 
-  def parseSort(sort: String): Order
+  def parseOrder(sort: String): Order
 
   def parseFilter(filter: String): Filter
 

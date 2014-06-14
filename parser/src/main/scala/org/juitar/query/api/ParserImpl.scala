@@ -16,8 +16,8 @@ class ParserImpl(trace: Boolean = false) extends Parser {
     parseTree(new SelectParseHandler(createAntlrParser(select)))
   }
 
-  def parseSort(sort: String): Order = {
-    parseTree(new SortParseHandler(createAntlrParser(sort)))
+  def parseOrder(order: String): Order = {
+    parseTree(new OrderParseHandler(createAntlrParser(order)))
   }
 
   def parseFilter(filter: String): Filter = {
@@ -61,7 +61,7 @@ object ParserImpl {
     val parserImpl: ParserImpl = new ParserImpl(true)
     val filter = parserImpl.parseFilter("a > b and b < c or d != 1 or e = 'ssss'")
     val select = parserImpl.parseSelect("a,b,c.d, e.f.g")
-    val order = parserImpl.parseSort("a,b,c.d desc, e.f.g asc")
+    val order = parserImpl.parseOrder("a,b,c.d desc, e.f.g asc")
     println(filter)
     println(select)
     println(order)
