@@ -6,7 +6,7 @@ package org.juitar.query.api.model
  */
 trait QueryElement
 
-case class Query(select: Select, filter: Filter, order: Order) extends QueryElement
+case class Query(select: Option[Select], filter: Option[Filter], order: Option[Order]) extends QueryElement
 
 case class Select(expr: Seq[Expression]) extends QueryElement {
   override def toString: String = expr.mkString(", ")
