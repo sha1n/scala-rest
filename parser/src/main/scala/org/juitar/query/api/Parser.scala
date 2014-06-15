@@ -17,3 +17,10 @@ trait Parser {
   def parseFilter(filter: String): Filter
 
 }
+
+object Parser {
+
+  def get: Parser = {
+    new ParserImpl
+  }
+}
