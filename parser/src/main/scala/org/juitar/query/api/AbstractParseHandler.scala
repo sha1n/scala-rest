@@ -29,7 +29,7 @@ abstract class AbstractParseHandler[T](parser: QueryParser) extends QueryParserB
    *
    * @return an instance of the generic type which represents a query tree construct.
    *
-   * @see #handleParsing()
+   * @see `handleParsing`
    */
   final def parseTree: T = {
     parser.addParseListener(this)

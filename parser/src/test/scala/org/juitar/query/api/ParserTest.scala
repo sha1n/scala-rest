@@ -8,10 +8,10 @@ import org.specs2.specification.Scope
  * @author sha1n
  * @since 6/13/14
  */
-class ParserImplTest extends SpecificationWithJUnit {
+class ParserTest extends SpecificationWithJUnit {
 
   trait Context extends Scope {
-    val parser = new ParserImpl
+    val parser = Parser.get
   }
 
   "select" should {

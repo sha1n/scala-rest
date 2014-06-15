@@ -10,7 +10,7 @@ import org.juitar.query.generated.{QueryLexer, QueryParser}
  *
  * @param trace ANTLR trace flag - for developer debug purposes only.
  */
-class ParserImpl(trace: Boolean = false) extends Parser {
+class ParserImpl private[api](trace: Boolean = false) extends Parser {
 
   def parseQuery(select: Option[String] = None, order: Option[String] = None, filter: Option[String] = None): Query = {
     new Query(
@@ -68,17 +68,4 @@ class ParserImpl(trace: Boolean = false) extends Parser {
     parser
   }
 
-}
-
-object ParserImpl {
-
-  def main(args: Array[String]) {
-    val parserImpl: ParserImpl = new ParserImpl(true)
-    val filter = parserImpl.parseFilter("a > b and b < c or d != 1 or e = 'ssss'")
-    val select = parserImpl.parseSelect("a,b,c.d, e.f.g")
-    val order = parserImpl.parseOrder("a,b,c.d desc, e.f.g asc")
-    println(filter)
-    println(select)
-    println(order)
-  }
 }
