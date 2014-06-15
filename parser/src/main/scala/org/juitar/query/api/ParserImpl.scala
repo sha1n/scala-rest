@@ -44,7 +44,8 @@ class ParserImpl(trace: Boolean = false) extends Parser {
     }
     catch {
       case e: ParserException => throw e
-      case e: Exception => throw new ParserError(e)
+      case e: ParserError => throw e
+      case e: Exception => throw new ParserException(e)
     }
   }
 

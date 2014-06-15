@@ -17,8 +17,7 @@ class FilterParseHandler(parser: QueryParser) extends AbstractParseHandler[Filte
   override def exitConditionAnd(ctx: ConditionAndContext) {
     if (!ctx.AND.isEmpty) {
       val conditionCount = ctx.simpleCondition.size
-      //      val parts: (mutable.Stack[QueryElement], mutable.Stack[QueryElement]) = elementStack.splitAt(conditionCount)
-      val conditions = popFirst(conditionCount) // parts._1.reverse.toSeq.asInstanceOf[Seq[Condition]]
+      val conditions = popFirst(conditionCount)
       val logicalCondition = new LogicalCondition(LogicalOp.AND, conditions)
       elementStack.push(logicalCondition)
     }
@@ -42,7 +41,7 @@ class FilterParseHandler(parser: QueryParser) extends AbstractParseHandler[Filte
   override def exitCondition(ctx: ConditionContext) {
     if (!ctx.OR.isEmpty) {
       val conditionCount = ctx.conditionAnd.size
-      val conditions = popFirst(conditionCount) // elementStack.splitAt(conditionCount)._1.reverse.toSeq.asInstanceOf[Seq[Condition]]
+      val conditions = popFirst(conditionCount)
       val logicalCondition = new LogicalCondition(LogicalOp.OR, conditions)
       elementStack.push(logicalCondition)
     }
@@ -93,7 +92,7 @@ class FilterParseHandler(parser: QueryParser) extends AbstractParseHandler[Filte
       case OP_VERBOSE_GREATER_OR_EQUAL =>
         CompConditionOp.GTE
       case _ =>
-        throw new ParserError(parsedOperatorString + " is not a valid comparison operator. This is a bug!")
+        throw new ParserException(parsedOperatorString + " is not a valid comparison operator. This is a bug!")
     }
   }
 }
