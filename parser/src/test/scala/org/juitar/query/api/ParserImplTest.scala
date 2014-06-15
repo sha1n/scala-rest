@@ -27,6 +27,14 @@ class ParserImplTest extends SpecificationWithJUnit {
       parser.parseSelect("1, 'str', c") mustEqual Select(Seq(NumberExpression("1"), StringExpression("'str'"), Field("c")))
     }
 
+    "fail on illegal select statement" in new Context {
+      parser.parseSelect("a b ") must throwA[ParserError]
+    }
+
+    "fail on illegal select statement" in new Context {
+      parser.parseSelect("a > b ") must throwA[ParserError]
+    }
+
   }
 
   "filter" should {
@@ -70,6 +78,14 @@ class ParserImplTest extends SpecificationWithJUnit {
     "succeed parsing order list with direction" in new Context {
       parser.parseOrder("a desc, b, c desc") mustEqual Order(
         Seq(OrderExpression(Field("a"), OrderDirection.DESC), OrderExpression(Field("b"), OrderDirection.ASC), OrderExpression(Field("c"), OrderDirection.DESC)))
+    }
+
+    "fail on illegal order list" in new Context {
+      parser.parseOrder("a b ") must throwA[ParserError]
+    }
+
+    "fail on illegal order list" in new Context {
+      parser.parseOrder("a > b ") must throwA[ParserError]
     }
   }
 
