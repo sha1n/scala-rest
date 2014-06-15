@@ -1,12 +1,14 @@
 package org.juitar.query.api
 
-import org.antlr.v4.runtime.RecognitionException
 
 /**
  * @author sha1n
  * @since 6/12/14
  */
-class ParserException(message: String, e: RecognitionException)
+class ParserException(message: String, e: Exception)
   extends RuntimeException(message, e) {
 
+  def this(e: Exception) = this(null, e)
+
+  def this(message: String) = this(message, null)
 }

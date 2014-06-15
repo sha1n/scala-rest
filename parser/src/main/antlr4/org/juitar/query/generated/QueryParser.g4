@@ -11,7 +11,7 @@ options {
 @header {
 package org.juitar.query.generated;
 
-import org.juitar.query.api.ParserException;
+import org.juitar.query.api.ParserError;
 
 }
 @parser::members {
@@ -28,7 +28,7 @@ public void exitRule() {
         final String devMessagePattern = "Unexpected token: %s at %s";
         String tokenErrorDisplay = getTokenErrorDisplay(e.getOffendingToken());
         String errorHeader = getErrorHeader(e);
-        throw new ParserException(String.format(devMessagePattern, tokenErrorDisplay, errorHeader), e);
+        throw new ParserError(String.format(devMessagePattern, tokenErrorDisplay, errorHeader), e);
     }
 
     super.exitRule();
