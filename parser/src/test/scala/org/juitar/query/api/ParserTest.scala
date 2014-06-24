@@ -63,7 +63,7 @@ class ParserTest extends SpecificationWithJUnit {
       ).toString
     }
 
-    "fail on invalid statement" in new Context {
+    "fail on invalid condition" in new Context {
       parser.parseFilter("a b > 1") must throwA[ParserError]
     }
 
@@ -80,13 +80,10 @@ class ParserTest extends SpecificationWithJUnit {
         Seq(OrderExpression(Field("a"), OrderDirection.DESC), OrderExpression(Field("b"), OrderDirection.ASC), OrderExpression(Field("c"), OrderDirection.DESC)))
     }
 
-    "fail on illegal order list" in new Context {
+    "fail on invalid order expression" in new Context {
       parser.parseOrder("a b ") must throwA[ParserError]
     }
 
-    "fail on illegal order list" in new Context {
-      parser.parseOrder("a > b ") must throwA[ParserError]
-    }
   }
 
   "query" should {
@@ -98,8 +95,12 @@ class ParserTest extends SpecificationWithJUnit {
       )
     }
 
-    "succeed no parameters" in new Context {
+    "succeed with no parameters" in new Context {
       parser.parseQuery(None, None, None) mustEqual Query(None, None, None)
+    }
+
+    "fail on invalid expression" in new Context {
+      parser.parseQuery(Some("x,y"), Some("x x"), None) must throwA[ParserError]
     }
   }
 
