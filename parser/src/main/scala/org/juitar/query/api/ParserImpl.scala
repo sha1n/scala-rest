@@ -13,30 +13,14 @@ import org.juitar.query.generated.{QueryLexer, QueryParser}
 class ParserImpl private[api](trace: Boolean = false) extends Parser {
 
   def parseQuery(select: Option[String] = None, order: Option[String] = None, filter: Option[String] = None): Query = {
-    new Query(
-      select = select.map(s => {
-        parseSelect(s)
-      }),
-      order = order.map(o => {
-        parseOrder(o)
-      }),
-      filter = filter.map(f => {
-        parseFilter(f)
-      })
-    )
+    ParseExecutor.parseQuery(select = select, filter = filter, order = order)
   }
 
-  def parseSelect(select: String): Select = {
-    parseTree(new SelectParseHandler(createAntlrParser(select)))
-  }
+  def parseSelect(select: String): Select = parseTree(new SelectParseHandler(createAntlrParser(select)))
 
-  def parseOrder(order: String): Order = {
-    parseTree(new OrderParseHandler(createAntlrParser(order)))
-  }
+  def parseOrder(order: String): Order = parseTree(new OrderParseHandler(createAntlrParser(order)))
 
-  def parseFilter(filter: String): Filter = {
-    parseTree(new FilterParseHandler(createAntlrParser(filter)))
-  }
+  def parseFilter(filter: String): Filter = parseTree(new FilterParseHandler(createAntlrParser(filter)))
 
   private def parseTree[T](parseHandler: AbstractParseHandler[T]): T = {
     try {
