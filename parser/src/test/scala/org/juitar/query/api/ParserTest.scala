@@ -88,15 +88,21 @@ class ParserTest extends SpecificationWithJUnit {
 
   "query" should {
     "succeed parsing with all segments" in new Context {
-      parser.parseQuery(Some("a,b"), Some("a desc, b"), Some("a <= c")) mustEqual Query(
+      val query = parser.parseQuery(Some("a,b"), Some("a desc, b"), Some("a <= c"))
+
+      query mustEqual Query(
         Some(Select(Seq(Field("a"), Field("b")))),
         Some(Filter(ComparisonCondition(CompConditionOp.LTE, Field("a"), Field("c")))),
         Some(Order(Seq(OrderExpression(Field("a"), OrderDirection.DESC), OrderExpression(Field("b")))))
       )
+
+      query.isEmpty mustEqual false
     }
 
     "succeed with no parameters" in new Context {
-      parser.parseQuery(None, None, None) mustEqual Query(None, None, None)
+      val query = parser.parseQuery(None, None, None)
+      query mustEqual Query(None, None, None)
+      query.isEmpty mustEqual true
     }
 
     "fail on invalid expression" in new Context {
