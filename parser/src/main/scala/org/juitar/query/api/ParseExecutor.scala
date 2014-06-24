@@ -24,7 +24,7 @@ private[api] object ParseExecutor {
       case None => Future.successful(None)
       case Some(s) =>
         val selectF = Future {
-          Some(Parser.get.parseSelect(s))
+          Some(Parser.instance.parseSelect(s))
         }
 
         selectF onComplete {
@@ -40,7 +40,7 @@ private[api] object ParseExecutor {
       case None => Future.successful(None)
       case Some(f) =>
         val filterF = Future {
-          Some(Parser.get.parseFilter(f))
+          Some(Parser.instance.parseFilter(f))
         }
 
         filterF onComplete {
@@ -56,7 +56,7 @@ private[api] object ParseExecutor {
       case None => Future.successful(None)
       case Some(o) =>
         val orderF = Future {
-          Some(Parser.get.parseOrder(o))
+          Some(Parser.instance.parseOrder(o))
         }
 
         orderF onComplete {
