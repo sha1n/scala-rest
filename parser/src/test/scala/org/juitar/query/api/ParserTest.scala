@@ -11,7 +11,7 @@ import org.specs2.specification.Scope
 class ParserTest extends SpecificationWithJUnit {
 
   trait Context extends Scope {
-    val parser = Parser.get
+    val parser = Parser.instance(trace = true)
   }
 
   "select" should {
