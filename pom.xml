@@ -8,7 +8,7 @@
     <artifactId>rest-query-utils</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <modules>
-        <module>parser</module>
+        <module>query-parser</module>
     </modules>
 
     <packaging>pom</packaging>
