@@ -14,7 +14,8 @@ class ParserTest extends SpecificationWithJUnit {
     val parser = Parser.instance(trace = true)
   }
 
-  "select" should {
+  "parseSelect" should {
+
     "succeed parsing basic field list" in new Context {
       parser.parseSelect("a, b, c") mustEqual Select(Seq(Field("a"), Field("b"), Field("c")))
     }
@@ -37,7 +38,8 @@ class ParserTest extends SpecificationWithJUnit {
 
   }
 
-  "filter" should {
+  "parseFilter" should {
+
     "succeed parsing basic condition" in new Context {
       parser.parseFilter("a < 1") mustEqual Filter(ComparisonCondition(CompConditionOp.LT, Field("a"), NumberExpression("1")))
     }
@@ -69,7 +71,8 @@ class ParserTest extends SpecificationWithJUnit {
 
   }
 
-  "order" should {
+  "parseOrder" should {
+
     "succeed parsing basic order list" in new Context {
       parser.parseOrder("a, b, c") mustEqual Order(
         Seq(OrderExpression(Field("a")), OrderExpression(Field("b")), OrderExpression(Field("c"))))
@@ -86,7 +89,8 @@ class ParserTest extends SpecificationWithJUnit {
 
   }
 
-  "query" should {
+  "parseQuery" should {
+
     "succeed parsing with all segments" in new Context {
       val query = parser.parseQuery(Some("a,b"), Some("a desc, b"), Some("a <= c"))
 
