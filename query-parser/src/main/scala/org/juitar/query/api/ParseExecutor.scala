@@ -2,11 +2,11 @@ package org.juitar.query.api
 
 import java.util.concurrent.Executors
 
-import org.juitar.query.api.model._
+import org.juitar.query.api.model.{Filter, Order, Query, Select}
 
-import scala.concurrent._
-import scala.concurrent.duration.Duration
-import scala.util.{Failure, Success}
+import scala.concurrent.duration._
+import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.util.{Failure, Success, Try}
 
 /**
  * @author sha1n
@@ -16,62 +16,63 @@ private[api] object ParseExecutor {
 
   implicit val ec = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(Runtime.getRuntime.availableProcessors()))
 
-  final val DefaultTimeout = 1000
+  private final val DefaultTimeout = 1000
 
   def parseQuery(select: Option[String], filter: Option[String], order: Option[String], timeoutMillis: Long = DefaultTimeout): Query = {
 
+
+    def handleParse[T]: (Try[Some[T]]) => Unit = {
+      case Success(r) =>
+      case Failure(t) => throw t
+    }
+
+    val dummyFuture = Future.successful(None)
+
     val selectFuture = select match {
-      case None => Future.successful(None)
+      case None => dummyFuture
       case Some(s) =>
+
         val selectF = Future {
           Some(Parser.instance.parseSelect(s))
         }
 
-        selectF onComplete {
-          case Success(r) =>
-          case Failure(t) => throw t
-        }
-
+        selectF onComplete handleParse[Select]
         selectF
 
     }
 
     val filterFuture = filter match {
-      case None => Future.successful(None)
+      case None => dummyFuture
       case Some(f) =>
+
         val filterF = Future {
           Some(Parser.instance.parseFilter(f))
         }
 
-        filterF onComplete {
-          case Success(r) =>
-          case Failure(t) => throw t
-        }
-
+        filterF onComplete handleParse[Filter]
         filterF
 
     }
 
     val orderFuture = order match {
-      case None => Future.successful(None)
+      case None => dummyFuture
       case Some(o) =>
+
         val orderF = Future {
           Some(Parser.instance.parseOrder(o))
         }
 
-        orderF onComplete {
-          case Success(r) =>
-          case Failure(t) => throw t
-        }
-
+        orderF onComplete handleParse[Order]
         orderF
 
     }
 
+    val timeout = Duration(timeoutMillis, MILLISECONDS)
+
     Query(
-      select = Await.result(selectFuture, Duration(timeoutMillis, "ms")),
-      filter = Await.result(filterFuture, Duration(timeoutMillis, "ms")),
-      order = Await.result(orderFuture, Duration(timeoutMillis, "ms")))
+      select = Await.result(selectFuture, timeout),
+      filter = Await.result(filterFuture, timeout),
+      order = Await.result(orderFuture, timeout))
   }
 
 }
