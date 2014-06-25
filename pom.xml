@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.juitar</groupId>
-    <artifactId>rest-query-utils</artifactId>
+    <artifactId>scala-rest</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <modules>
         <module>query-parser</module>
