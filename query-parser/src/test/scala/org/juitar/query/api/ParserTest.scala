@@ -36,6 +36,10 @@ class ParserTest extends SpecificationWithJUnit {
       parser.parseSelect("a > b ") must throwA[ParserError]
     }
 
+    "fail on null expression" in new Context {
+      parser.parseSelect(null) must throwA[IllegalArgumentException]
+    }
+
   }
 
   "parseFilter" should {
@@ -69,6 +73,10 @@ class ParserTest extends SpecificationWithJUnit {
       parser.parseFilter("a b > 1") must throwA[ParserError]
     }
 
+    "fail on null condition" in new Context {
+      parser.parseFilter(null) must throwA[IllegalArgumentException]
+    }
+
   }
 
   "parseOrder" should {
@@ -87,16 +95,21 @@ class ParserTest extends SpecificationWithJUnit {
       parser.parseOrder("a b ") must throwA[ParserError]
     }
 
+    "fail on null expression" in new Context {
+      parser.parseOrder(null) must throwA[IllegalArgumentException]
+    }
+
+
   }
 
   "parseQuery" should {
 
     "succeed parsing with all segments" in new Context {
-      val query = parser.parseQuery(Some("a,b"), Some("a desc, b"), Some("a <= c"))
+      val query = parser.parseQuery(Some("a,b"), Some("a desc, b"), Some("a ne c"))
 
       query mustEqual Query(
         Some(Select(Seq(Field("a"), Field("b")))),
-        Some(Filter(ComparisonCondition(CompConditionOp.LTE, Field("a"), Field("c")))),
+        Some(Filter(ComparisonCondition(CompConditionOp.NE, Field("a"), Field("c")))),
         Some(Order(Seq(OrderExpression(Field("a"), OrderDirection.DESC), OrderExpression(Field("b")))))
       )
 
@@ -111,6 +124,29 @@ class ParserTest extends SpecificationWithJUnit {
 
     "fail on invalid expression" in new Context {
       parser.parseQuery(Some("x,y"), Some("x x"), None) must throwA[ParserError]
+    }
+  }
+
+  "implicit parser conversions" should {
+
+    "convert all query segments to objects successfully" in new Context {
+      val select: Select = "a, b"
+      val filter: Filter = "a <= c"
+      val order: Order = "a desc, b"
+
+      select mustEqual Select(Seq(Field("a"), Field("b")))
+      filter mustEqual Filter(ComparisonCondition(CompConditionOp.LTE, Field("a"), Field("c")))
+      order mustEqual Order(Seq(OrderExpression(Field("a"), OrderDirection.DESC), OrderExpression(Field("b"))))
+    }
+
+    "convert all query segments to options successfully" in new Context {
+      val query = Query(select = "a, b.c", filter = "a.e ne c", order = "a desc, b")
+
+      query mustEqual Query(
+        Some(Select(Seq(Field("a"), Field(Seq("b", "c"))))),
+        Some(Filter(ComparisonCondition(CompConditionOp.NE, Field(Seq("a", "e")), Field("c")))),
+        Some(Order(Seq(OrderExpression(Field("a"), OrderDirection.DESC), OrderExpression(Field("b")))))
+      )
     }
   }
 
