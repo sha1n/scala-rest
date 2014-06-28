@@ -38,6 +38,8 @@ class ParserImpl private[api](trace: Boolean = false) extends Parser {
    * @return a `QueryParser` loaded with the input expression
    */
   private def createAntlrParser(inputExpression: String): QueryParser = {
+    require(inputExpression != null, "input expression cannot be null")
+
 
     val inputStream = new ANTLRInputStream(inputExpression.toCharArray, inputExpression.length)
     val lexer = new QueryLexer(inputStream)
