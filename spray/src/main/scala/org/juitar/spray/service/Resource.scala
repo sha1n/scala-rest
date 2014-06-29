@@ -1,6 +1,8 @@
 package org.juitar.spray.service
 
+import org.juitar.query.api.model.Query
 import spray.http.MediaTypes._
+import spray.httpx.marshalling.ToResponseMarshallable._
 import spray.routing.HttpService
 
 /**
@@ -18,5 +20,15 @@ trait Resource extends HttpService {
           }
         }
       }
-    }
+    } ~
+      path("echo-query") {
+        get {
+          parameters('filter.?, 'order.?, 'select.?) { (filter, order, select) => {
+
+            val query = Query(select = select, filter = filter, order = order)
+            complete(query.toString)
+          }
+          }
+        }
+      }
 }

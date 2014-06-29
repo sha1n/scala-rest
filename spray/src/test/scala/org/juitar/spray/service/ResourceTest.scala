@@ -1,5 +1,6 @@
 package org.juitar.spray.service
 
+import org.juitar.query.api.model.Query
 import org.specs2.mutable.SpecificationWithJUnit
 import spray.http.StatusCodes._
 import spray.testkit.Specs2RouteTest
@@ -30,6 +31,14 @@ class ResourceTest extends SpecificationWithJUnit with Specs2RouteTest with Reso
     "leave GET requests to other paths unhandled" in {
       Get("/404") ~> root ~> check {
         handled must beFalse
+      }
+    }
+  }
+
+  "echo-query" should {
+    "echo parsed query expression" in {
+      Get("/echo-query?select=a,b.c&filter=a>b&order=a,b") ~> root ~> check {
+        responseAs[String] mustEqual Query(select = "a,b.c", filter = "a>b", order = "a,b").toString
       }
     }
   }
