@@ -20,4 +20,19 @@ package object api {
 
   implicit def asOrderOption(o: String): Option[Order] = Option(Parser.instance.parseOrder(o))
 
+  implicit def asSelectOption(expr: Option[String]): Option[Select] = expr match {
+    case None => None
+    case Some(s) => Some(Parser.instance.parseSelect(s))
+  }
+
+  implicit def asFilterOption(expr: Option[String]): Option[Filter] = expr match {
+    case None => None
+    case Some(s) => Some(Parser.instance.parseFilter(s))
+  }
+
+  implicit def asOrderOption(expr: Option[String]): Option[Order] = expr match {
+    case None => None
+    case Some(s) => Some(Parser.instance.parseOrder(s))
+  }
+
 }
