@@ -1,5 +1,7 @@
 package org.juitar.spray.service
 
+import java.lang.management.ManagementFactory
+
 import org.juitar.query.api.model.Query
 import spray.http.MediaTypes._
 import spray.httpx.marshalling.ToResponseMarshallable._
@@ -21,6 +23,19 @@ trait Resource extends HttpService {
         }
       }
     } ~
+      path("threads") {
+        get {
+          val tmb = ManagementFactory.getThreadMXBean
+
+          import tmb._
+
+          val info = getThreadInfo(getAllThreadIds)
+
+          complete(
+            getThreadCount.toString + "\r\n" +
+              info.sortBy(ti => ti.getThreadName).mkString)
+        }
+      } ~
       path("echo-query") {
         get {
           parameters('filter.?, 'order.?, 'select.?) { (filter, order, select) => {
