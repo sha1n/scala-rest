@@ -5,15 +5,15 @@ import java.lang.management.ManagementFactory
 import org.juitar.query.api.model.Query
 import spray.http.MediaTypes._
 import spray.httpx.marshalling.ToResponseMarshallable._
-import spray.routing.HttpService
+import spray.routing.HttpServiceBase
 
 /**
  * @author shain
  * @since 6/25/14
  */
-trait Resource extends HttpService {
+trait MonitoringResource extends HttpServiceBase {
 
-  val root =
+  val resourcePath =
     path("") {
       get {
         respondWithMediaType(`text/plain`) {
